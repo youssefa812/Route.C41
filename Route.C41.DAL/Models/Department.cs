@@ -13,6 +13,8 @@ namespace Route.C41.DAL.Models
         public int Id { get; set; }
         public string Code { get; set; }
         public string Name { get; set; }
+
+        [Display(Name = "Date Od Creation")]
         public DateTime DateOfCreation { get; set; }
     }
 }

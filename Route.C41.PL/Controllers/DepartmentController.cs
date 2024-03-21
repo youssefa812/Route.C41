@@ -19,7 +19,8 @@ namespace Route.C41.PL.Controllers
         public IActionResult Index()
         {
             var departments = _departmentsRepo.GetAll();
-            return View();
+
+            return View(departments);
         }
     }
 }
