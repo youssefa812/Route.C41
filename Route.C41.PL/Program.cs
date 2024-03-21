@@ -14,7 +14,12 @@ namespace Route.C41.PL
         // Entry Point
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            var hostBuilder = CreateHostBuilder(args).Build();
+
+            // Data Seeding
+            // Apply Migrations
+
+            hostBuilder.Run(); // Application is Ready For Request
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
