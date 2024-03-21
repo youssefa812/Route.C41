@@ -16,7 +16,7 @@ namespace Route.C41.PL
 {
     public class Startup
     {
-        public IConfiguration Configuration { get; } = null;
+        public IConfiguration Configuration { get; }
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
