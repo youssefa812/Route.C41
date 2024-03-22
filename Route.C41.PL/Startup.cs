@@ -30,8 +30,8 @@ namespace Route.C41.PL
         {
             services.AddControllersWithViews(); // Register Built-In Services Required By MVC
 
-            services.AddScoped<ApplicationDbContext>();
-            services.AddScoped<DbContextOptions<ApplicationDbContext>>();
+            //services.AddScoped<ApplicationDbContext>();
+            //services.AddScoped<DbContextOptions<ApplicationDbContext>>();
 
             services.AddDbContext<ApplicationDbContext>(options =>
             {
