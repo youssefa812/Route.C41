@@ -108,5 +108,39 @@ namespace Route.C41.PL.Controllers
 			}
 		}
 
+
+		//[HttpGet]
+		//public IActionResult Delete(int? id)
+		//{
+		//	return Details(id, "Delete");
+		//}
+
+
+		[HttpPost]
+		public IActionResult Delete([FromRoute] int id, Department department)
+		{
+			if (id != department.Id)
+				return BadRequest();
+
+			if (!ModelState.IsValid)
+				return View(department);
+
+			try
+			{
+				_departmentsRepo.Delete(department);
+				return RedirectToAction(nameof(Index));
+			}
+			catch (Exception ex)
+			{
+				// 1. Log Exeption 
+				// 2. Frindly Message
+				if (_env.IsDevelopment())
+					ModelState.AddModelError(string.Empty, ex.Message);
+				else
+					ModelState.AddModelError(string.Empty, "An Error Has occurred during Deleting the Department");
+
+				return View(department);
+			}
+		}
 	}
 }
