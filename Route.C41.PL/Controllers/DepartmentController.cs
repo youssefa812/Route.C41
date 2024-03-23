@@ -109,11 +109,11 @@ namespace Route.C41.PL.Controllers
 		}
 
 
-		//[HttpGet]
-		//public IActionResult Delete(int? id)
-		//{
-		//	return Details(id, "Delete");
-		//}
+		[HttpGet]
+		public IActionResult Delete(int? id)
+		{
+			return Details(id, "Delete");
+		}
 
 
 		[HttpPost]
