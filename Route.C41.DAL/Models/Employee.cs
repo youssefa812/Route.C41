@@ -23,7 +23,7 @@ namespace Route.C41.DAL.Models
 		[EnumMember(Value = "Part Time")]
 		PartTime = 2
 	}
-	public class Employee
+	public class Employee : ModelBase
 	{
 		public int Id { get; set; }
 		[Required]
