@@ -25,7 +25,6 @@ namespace Route.C41.DAL.Models
 	}
 	public class Employee : ModelBase
 	{
-		public int Id { get; set; }
 		[Required]
 		[MaxLength(50, ErrorMessage = "Max Length of name is 50 chars")]
 		[MinLength(5, ErrorMessage = "Min Length of name is 5 chars")]

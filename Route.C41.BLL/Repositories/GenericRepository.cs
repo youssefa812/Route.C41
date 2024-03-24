@@ -33,7 +33,7 @@ namespace Route.C41.BLL.Repositories
 		}
 		public int Delete(T entity)
 		{
-			_dbContext.Employees.Remove(entity);
+			_dbContext.Set<T>().Remove(entity);
 			return _dbContext.SaveChanges();
 		}
 
@@ -47,7 +47,7 @@ namespace Route.C41.BLL.Repositories
 			///return Employee;
 		}
 
-		public IEnumerable<T> GetAll()
-			=> _dbContext.Set<T>().AsNoTracking().ToList();
-	}
+        public IEnumerable<T> GetAll()
+          => _dbContext.Set<T>().AsNoTracking().ToList();
+    }
 }

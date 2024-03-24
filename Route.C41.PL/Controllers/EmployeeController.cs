@@ -7,14 +7,14 @@ using System.Security.Cryptography.X509Certificates;
 
 namespace Route.C41.PL.Controllers
 {
-	public class EmployeeControler : Controller
+	public class EmployeeController : Controller
 	{
 		private readonly IEmployeeRepository _employeeRepo;
 		private readonly IHostEnvironment _env;
 
-		public EmployeeControler(IEmployeeRepository EmployeeRepository, IHostEnvironment env)
+		public EmployeeController(IEmployeeRepository employeeRepository, IHostEnvironment env)
 		{
-			_employeeRepo = EmployeeRepository;
+			_employeeRepo = employeeRepository;
 			_env = env;
 		}
 
