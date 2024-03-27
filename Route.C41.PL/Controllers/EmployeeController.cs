@@ -22,6 +22,9 @@ namespace Route.C41.PL.Controllers
 		//[HttpGet]
 		public IActionResult Index()
 		{
+			//ViewData["Message"] = "Hello ViewData";
+			//ViewBag.Message = "Hello ViewBag";
+
 			var employees = _employeeRepo.GetAll();
 			return View(employees);
 		}
