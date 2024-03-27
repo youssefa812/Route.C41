@@ -23,5 +23,7 @@ namespace Route.C41.BLL.Repositories
 		{
 			return _dbContext.Employees.Where(E => E.Address.ToLower() == address.ToLower());
 		}
+		public override IEnumerable<Employee> GetAll()
+			=> _dbContext.Employees.Include(E => E.Department).ToList();
 	}
 }

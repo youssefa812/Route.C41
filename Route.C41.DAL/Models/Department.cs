@@ -17,6 +17,6 @@ namespace Route.C41.DAL.Models
         public DateTime DateOfCreation { get; set; }
 
         // Navigational Property
-        public ICollection<Employee> Employees { get; set; } = new HashSet<Employee>();
+        public virtual ICollection<Employee> Employees { get; set; } = new HashSet<Employee>();
     }
 }

@@ -47,7 +47,7 @@ namespace Route.C41.BLL.Repositories
 			///return Employee;
 		}
 
-        public IEnumerable<T> GetAll()
-          => _dbContext.Set<T>().AsNoTracking().ToList();
+        virtual public IEnumerable<T> GetAll()
+			=> _dbContext.Set<T>().AsNoTracking().ToList();
     }
 }
