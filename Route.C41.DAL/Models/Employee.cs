@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
@@ -58,5 +59,12 @@ namespace Route.C41.DAL.Models
 		public Gender Gender { get; set; }
 
 		public DateTime CreationDate { get; set; } = DateTime.Now;
+	
+		// ForeginKey
+		public int? DepartmentId { get; set; }
+
+		// Navigational Property
+		// [InverseProperty(nameof(Models.Department.Employees))]
+		public Department Department { get; set; }
 	}
 }

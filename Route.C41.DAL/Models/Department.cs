@@ -15,5 +15,8 @@ namespace Route.C41.DAL.Models
 
         [Display(Name = "Date Of Creation")]
         public DateTime DateOfCreation { get; set; }
+
+        // Navigational Property
+        public ICollection<Employee> Employees { get; set; } = new HashSet<Employee>();
     }
 }
