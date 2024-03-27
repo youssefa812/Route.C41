@@ -68,7 +68,7 @@ namespace Route.C41.PL.Controllers
 		[HttpGet]
 		public IActionResult Edit(int? id)
 		{
-			return Details(id);
+			return Details(id, "Edit");
 		}
 
 		[HttpPost]

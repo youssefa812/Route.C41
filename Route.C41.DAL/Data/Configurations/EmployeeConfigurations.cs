@@ -27,7 +27,7 @@ namespace Route.C41.DAL.Data.Configurations
 			builder.Property(E => E.EmployeeType)
 					.HasConversion(
 					(Type) => Type.ToString(),
-					(TypeAsString) => (EmpType)Enum.Parse(typeof(Type), TypeAsString)
+					(TypeAsString) => (EmpType)Enum.Parse(typeof(EmpType), TypeAsString)
 					);
 		}
 	}
