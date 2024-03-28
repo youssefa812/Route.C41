@@ -1,10 +1,13 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
 using Route.C41.BLL.Interfaces;
 using Route.C41.BLL.Repositories;
 using Route.C41.DAL.Models;
+using Route.C41.PL.ViewModels;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 
@@ -12,11 +15,13 @@ namespace Route.C41.PL.Controllers
 {
     public class EmployeeController : Controller
     {
+        private readonly IMapper _mapper;
         private readonly IEmployeeRepository _employeeRepository;
         private readonly IWebHostEnvironment _env;
 
-        public EmployeeController(IEmployeeRepository employeeRepository, IWebHostEnvironment env)
+        public EmployeeController(IMapper mapper, IEmployeeRepository employeeRepository, IWebHostEnvironment env)
         {
+            _mapper = mapper;
             _employeeRepository = employeeRepository;
             _env = env;
         }
@@ -29,17 +34,21 @@ namespace Route.C41.PL.Controllers
             else
                 employees = _employeeRepository.SearchByName(searchInput);
 
-            return View(employees);
+            var mappedEmps = _mapper.Map<IEnumerable<Employee>, IEnumerable<EmployeeViewModel>>(employees);
+
+            return View(mappedEmps);
         }
         public IActionResult Create()
         {
             return View();
         }
         [HttpPost]
-        public IActionResult Create(Employee employee)
+        public IActionResult Create(EmployeeViewModel employeeVm)
         {
             if (ModelState.IsValid) // server side validation
             {
+                var employee = _mapper.Map<EmployeeViewModel, Employee>(employeeVm);
+
                 var count = _employeeRepository.Add(employee);
 
                 if (count > 0)
@@ -49,7 +58,7 @@ namespace Route.C41.PL.Controllers
 
                 return RedirectToAction(nameof(Index));
             }
-            return View(employee);
+            return View(employeeVm);
         }
 
         public IActionResult Details(int? id, string ViewName = "Details")
@@ -61,7 +70,9 @@ namespace Route.C41.PL.Controllers
             if (employee is null)
                 return NotFound();
 
-            return View(ViewName, employee);
+            var mappedEmp = _mapper.Map<Employee, EmployeeViewModel>(employee);
+
+            return View(ViewName, mappedEmp);
         }
 
 
@@ -72,17 +83,14 @@ namespace Route.C41.PL.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit([FromRoute] int id, Employee employee)
+        public IActionResult Edit(EmployeeViewModel employeeVm)
         {
-
-            if (id != employee.Id)
-                return BadRequest();
-
             if (!ModelState.IsValid)
-                return View(employee);
+                return View(employeeVm);
 
             try
             {
+                var employee = _mapper.Map<EmployeeViewModel, Employee>(employeeVm);
                 _employeeRepository.Update(employee);
                 return RedirectToAction(nameof(Index));
             }
@@ -95,7 +103,7 @@ namespace Route.C41.PL.Controllers
                 else
                     ModelState.AddModelError(string.Empty, "An Error Has Occurred during Updating the employee");
 
-                return View(employee);
+                return View(employeeVm);
             }
         }
 
