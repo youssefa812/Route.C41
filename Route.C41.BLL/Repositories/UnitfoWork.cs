@@ -1,6 +1,8 @@
 ﻿using Route.C41.BLL.Interfaces;
 using Route.C41.DAL.Data;
+using Route.C41.DAL.Models;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,13 +14,12 @@ namespace Route.C41.BLL.Repositories
     {
         private readonly ApplicationDbContext _applicationDbContext;
 
-        public IEmployeeRepository EmployeeRepository { get; set; } = null;
-        public IDepartmentRepository DepartmentRepository { get; set; } = null;
+        private Hashtable _repositories;
+
         public UnitfoWork(ApplicationDbContext applicationDbContext)
         {
             _applicationDbContext = applicationDbContext;
-            EmployeeRepository = new EmployeeRepository(applicationDbContext);
-            DepartmentRepository = new DepartmentRepository(applicationDbContext);
+            _repositories = new Hashtable();
         }
 
         public int Complete()
@@ -30,5 +31,29 @@ namespace Route.C41.BLL.Repositories
         {
             _applicationDbContext.Dispose();
         }
+        public IGenaricRepository<T> Repository<T>() where T : ModelBase
+        {
+            var key = typeof(T).Name; // Employee
+
+            if (!_repositories.ContainsKey(key))
+            {
+
+                if (key == nameof(Employee))
+                {
+                    var repository = new EmployeeRepository(_applicationDbContext);
+                    _repositories.Add(key, repository);
+
+                }
+                else
+                {
+                    var repository = new GenericRepository<T>(_applicationDbContext);
+                    _repositories.Add(key, repository);
+
+                }
+            }
+
+            return _repositories[key] as IGenaricRepository<T>;
+        }
+
     }
 }
