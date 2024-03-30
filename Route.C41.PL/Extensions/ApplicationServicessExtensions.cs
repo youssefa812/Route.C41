@@ -10,9 +10,11 @@ namespace Route.C41.PL.Extensions
 	{
 		public static IServiceCollection AddApplicationServices(this IServiceCollection services)
 		{
-			services.AddScoped<IDepartmentRepository, DepartmentRepository>();
-			services.AddScoped<IEmployeeRepository, EmployeeRepository>();
-            services.AddAutoMapper(M => M.AddProfile(new MappingProfiles()));
+			//services.AddScoped<IDepartmentRepository, DepartmentRepository>();
+			//services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+			services.AddScoped<IUnitOfWork, UnitfoWork>();
+
+			services.AddAutoMapper(M => M.AddProfile(new MappingProfiles()));
 
 
             return services;
