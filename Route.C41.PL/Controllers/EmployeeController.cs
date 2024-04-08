@@ -51,7 +51,7 @@ namespace Route.C41.PL.Controllers
 		{
 			if (ModelState.IsValid) // server side validation
             {
-				employeeVm.ImageName = DocumentSettings.UploadFile(employeeVm.Image, "images");
+				employeeVm.ImageName = await DocumentSettings.UploadFile(employeeVm.Image, "images");
 
 				var employee = _mapper.Map<EmployeeViewModel, Employee>(employeeVm);
 
