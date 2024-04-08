@@ -1,12 +1,13 @@
 ﻿using System;
 using System.IO;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 
 namespace Route.Session3.PL.Helpers
 {
 	public static class DocumentSettings
 	{
-		public static string UploadFile(IFormFile file, string folderName)
+		public static async Task<string> UploadFile(IFormFile file, string folderName)
 		{
 
 			string folderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "files", folderName);
@@ -20,7 +21,7 @@ namespace Route.Session3.PL.Helpers
 
 			using var fileStream = new FileStream(filePath, FileMode.Create);
 
-			file.CopyTo(fileStream);
+			await file.CopyToAsync(fileStream);
 
 			return fileName;
 		}

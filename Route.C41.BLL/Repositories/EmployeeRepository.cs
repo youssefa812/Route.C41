@@ -23,8 +23,8 @@ namespace Route.C41.BLL.Repositories
 		{
 			return _dbContext.Employees.Where(E => E.Address.ToLower() == address.ToLower());
 		}
-		public override IEnumerable<Employee> GetAll()
-			=> _dbContext.Employees.Include(E => E.Department).ToList();
+		public override async Task<IEnumerable<Employee>> GetAllAsync()
+			=> await _dbContext.Employees.Include(E => E.Department).ToListAsync();
 		
 		public IQueryable<Employee> SearchByName(string name)
 			=> _dbContext.Employees.Where(E => E.Name.ToLower().Contains(name.ToLower())).Include(E => E.Department);

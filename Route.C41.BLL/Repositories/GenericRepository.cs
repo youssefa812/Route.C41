@@ -34,17 +34,17 @@ namespace Route.C41.BLL.Repositories
 			_dbContext.Remove(entity);
 		}
 
-		public T Get(int id)
+		public async Task<T> GetAsync(int id)
 		{
 			//return _dbContext.Set<T>().Find(id);
-			return _dbContext.Find<T>(id); //EF Core 3.1 NEW Feature
+			return await _dbContext.FindAsync<T>(id); //EF Core 3.1 NEW Feature
 			///var Employee = _dbContext.Employees.Local.Where(D => D.Id == id).FirstOrDefault();
 			///if (Employee == null)
 			///    Employee = _dbContext.Employees.Where(D => D.Id == id).FirstOrDefault();
 			///return Employee;
 		}
 
-        virtual public IEnumerable<T> GetAll()
-			=> _dbContext.Set<T>().AsNoTracking().ToList();
+        virtual public async Task<IEnumerable<T>> GetAllAsync()
+			=> await _dbContext.Set<T>().AsNoTracking().ToListAsync();
     }
 }

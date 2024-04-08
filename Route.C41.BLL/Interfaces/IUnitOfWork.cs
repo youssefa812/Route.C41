@@ -8,10 +8,9 @@ using System.Threading.Tasks;
 
 namespace Route.C41.BLL.Interfaces
 {
-    public interface IUnitOfWork
+    public interface IUnitOfWork : IAsyncDisposable
     {
         IGenaricRepository<T> Repository<T>() where T : ModelBase;
-
-        public int Complete();
+        Task<int> Complete();
     }
 }

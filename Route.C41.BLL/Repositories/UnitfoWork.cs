@@ -10,50 +10,46 @@ using System.Threading.Tasks;
 
 namespace Route.C41.BLL.Repositories
 {
-    public class UnitfoWork : IUnitOfWork, IDisposable
-    {
-        private readonly ApplicationDbContext _applicationDbContext;
+	public class UnitfoWork : IUnitOfWork
+	{
+		private readonly ApplicationDbContext _applicationDbContext;
 
-        private Hashtable _repositories;
+		private Hashtable _repositories;
 
-        public UnitfoWork(ApplicationDbContext applicationDbContext)
-        {
-            _applicationDbContext = applicationDbContext;
-            _repositories = new Hashtable();
-        }
+		public UnitfoWork(ApplicationDbContext applicationDbContext)
+		{
+			_applicationDbContext = applicationDbContext;
+			_repositories = new Hashtable();
+		}
 
-        public int Complete()
-        {
-            return _applicationDbContext.SaveChanges();
-        }
+		public async Task<int> Complete()
+			=> await _applicationDbContext.SaveChangesAsync();
 
-        public void Dispose()
-        {
-            _applicationDbContext.Dispose();
-        }
-        public IGenaricRepository<T> Repository<T>() where T : ModelBase
-        {
-            var key = typeof(T).Name; // Employee
+		public async ValueTask DisposeAsync()
+			=>await _applicationDbContext.DisposeAsync();
+		public IGenaricRepository<T> Repository<T>() where T : ModelBase
+		{
+			var key = typeof(T).Name; // Employee
 
-            if (!_repositories.ContainsKey(key))
-            {
+			if (!_repositories.ContainsKey(key))
+			{
 
-                if (key == nameof(Employee))
-                {
-                    var repository = new EmployeeRepository(_applicationDbContext);
-                    _repositories.Add(key, repository);
+				if (key == nameof(Employee))
+				{
+					var repository = new EmployeeRepository(_applicationDbContext);
+					_repositories.Add(key, repository);
 
-                }
-                else
-                {
-                    var repository = new GenericRepository<T>(_applicationDbContext);
-                    _repositories.Add(key, repository);
+				}
+				else
+				{
+					var repository = new GenericRepository<T>(_applicationDbContext);
+					_repositories.Add(key, repository);
 
-                }
-            }
+				}
+			}
 
-            return _repositories[key] as IGenaricRepository<T>;
-        }
+			return _repositories[key] as IGenaricRepository<T>;
+		}
 
-    }
+	}
 }

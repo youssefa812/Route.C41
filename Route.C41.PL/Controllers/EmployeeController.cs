@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
+using System.Threading.Tasks;
 
 namespace Route.C41.PL.Controllers
 {
@@ -27,15 +28,15 @@ namespace Route.C41.PL.Controllers
             _unitOfWork = unitOfWork;
             _env = env;
         }
-        public IActionResult Index(string searchInput)
-        {
-            var employees = Enumerable.Empty<Employee>();
+		public async Task<IActionResult> Index(string searchInput)
+		{
+			var employees = Enumerable.Empty<Employee>();
 			var employeeRepo = _unitOfWork.Repository<Employee>() as EmployeeRepository;
 
 			if (string.IsNullOrEmpty(searchInput))
-                employees = employeeRepo.GetAll();
-            else
-                employees = employeeRepo.SearchByName(searchInput);
+				employees = await employeeRepo.GetAllAsync();
+			else
+				employees = employeeRepo.SearchByName(searchInput);
 
             var mappedEmps = _mapper.Map<IEnumerable<Employee>, IEnumerable<EmployeeViewModel>>(employees);
 
@@ -46,16 +47,16 @@ namespace Route.C41.PL.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult Create(EmployeeViewModel employeeVm)
-        {
-            if (ModelState.IsValid) // server side validation
+		public async Task<IActionResult> Create(EmployeeViewModel employeeVm)
+		{
+			if (ModelState.IsValid) // server side validation
             {
 				employeeVm.ImageName = DocumentSettings.UploadFile(employeeVm.Image, "images");
 
 				var employee = _mapper.Map<EmployeeViewModel, Employee>(employeeVm);
 
                 _unitOfWork.Repository<Employee>().Add(employee);
-                var count = _unitOfWork.Complete();
+                var count = await _unitOfWork.Complete();
 
                 if (count > 0)
                     TempData["Message"] = "Employee is Created Successfully";
@@ -67,11 +68,11 @@ namespace Route.C41.PL.Controllers
             return View(employeeVm);
         }
 
-        public IActionResult Details(int? id, string ViewName = "Details")
-        {
-            if (id is null)
+		public async Task<IActionResult> Details(int? id, string ViewName = "Details")
+		{
+			if (id is null)
                 return BadRequest();
-            var employee = _unitOfWork.Repository<Employee>().Get(id.Value);
+            var employee =await _unitOfWork.Repository<Employee>().GetAsync(id.Value);
 
             if (employee is null)
                 return NotFound();
@@ -82,9 +83,9 @@ namespace Route.C41.PL.Controllers
         }
 
 
-        public IActionResult Edit(int? id)
-        {
-            return Details(id, "Edit");
+		public async Task<IActionResult> Edit(int? id)
+		{
+			return await Details(id, "Edit");
         }
 
         [HttpPost]
@@ -115,12 +116,12 @@ namespace Route.C41.PL.Controllers
         }
 
         [HttpPost]
-        public IActionResult Delete(int? id)
-        {
-            if (!id.HasValue)
+		public async Task<IActionResult> Delete(int? id)
+		{
+			if (!id.HasValue)
                 return BadRequest();
 
-            var employee = _unitOfWork.Repository<Employee>().Get(id.Value);
+            var employee =await _unitOfWork.Repository<Employee>().GetAsync(id.Value);
 
             if (employee is null)
                 return NotFound();
@@ -129,7 +130,7 @@ namespace Route.C41.PL.Controllers
             {
                 _unitOfWork.Repository<Employee>().Delete(employee);
 
-				var count = _unitOfWork.Complete();
+				var count = await _unitOfWork.Complete();
 				if (count > 0)
 				{
 					DocumentSettings.DeleteFile(employee.ImageName, "images");
