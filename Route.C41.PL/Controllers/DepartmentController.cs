@@ -5,6 +5,7 @@ using Microsoft.Extensions.Hosting;
 using Route.C41.BLL.Interfaces;
 using Route.C41.BLL.Repositories;
 using Route.C41.DAL.Models;
+using Route.Session3.PL.Helpers;
 using Route.C41.PL.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -30,7 +31,7 @@ namespace Route.C41.PL.Controllers
 		// /Department/Index
 		public IActionResult Index()
 		{
-			var departments = _unitOfWork.DepartmentRepository.GetAll();
+			var departments = _unitOfWork.Repository<Department>().GetAll();
 
             var mappedDeps = _mapper.Map<IEnumerable<Department>, IEnumerable<DepartmentViewModel>>(departments);
 
@@ -50,7 +51,7 @@ namespace Route.C41.PL.Controllers
 			if (ModelState.IsValid) // Server Side Validation
 			{
                 var department = _mapper.Map<DepartmentViewModel, Department>(departmentVm);
-				_unitOfWork.DepartmentRepository.Add(department);
+				_unitOfWork.Repository<Department>().Add(department);
 				var count = _unitOfWork.Complete();
                 if (count > 0)
 				{
@@ -67,7 +68,7 @@ namespace Route.C41.PL.Controllers
 			if (!id.HasValue)
 				return BadRequest(); // 400
 
-			var department = _unitOfWork.DepartmentRepository.Get(id.Value);
+			var department = _unitOfWork.Repository<Department>().Get(id.Value);
 
 			if (department is null)
 				return NotFound(); // 404
@@ -103,7 +104,7 @@ namespace Route.C41.PL.Controllers
 			try
 			{
                 var department = _mapper.Map<DepartmentViewModel, Department>(departmentVm);
-                _unitOfWork.DepartmentRepository.Update(department);
+                _unitOfWork.Repository<Department>().Update(department);
 				_unitOfWork.Complete();
 				return RedirectToAction(nameof(Index));
 			}
@@ -126,14 +127,14 @@ namespace Route.C41.PL.Controllers
 			if (!id.HasValue)
 				return BadRequest();
 
-			var department = _unitOfWork.DepartmentRepository.Get(id.Value);
+			var department = _unitOfWork.Repository<Department>().Get(id.Value);
 
 			if (department is null)
 				return NotFound();
 
 			try
 			{
-				_unitOfWork.DepartmentRepository.Delete(department);
+				_unitOfWork.Repository<Department>().Delete(department);
 			}
 			catch (Exception ex)
 			{

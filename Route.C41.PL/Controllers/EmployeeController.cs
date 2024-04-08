@@ -6,6 +6,7 @@ using Route.C41.BLL.Interfaces;
 using Route.C41.BLL.Repositories;
 using Route.C41.DAL.Models;
 using Route.C41.PL.ViewModels;
+using Route.Session3.PL.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,11 +30,12 @@ namespace Route.C41.PL.Controllers
         public IActionResult Index(string searchInput)
         {
             var employees = Enumerable.Empty<Employee>();
+			var employeeRepo = _unitOfWork.Repository<Employee>() as EmployeeRepository;
 
-            if (string.IsNullOrEmpty(searchInput))
-                employees = _unitOfWork.EmployeeRepository.GetAll();
+			if (string.IsNullOrEmpty(searchInput))
+                employees = employeeRepo.GetAll();
             else
-                employees = _unitOfWork.EmployeeRepository.SearchByName(searchInput);
+                employees = employeeRepo.SearchByName(searchInput);
 
             var mappedEmps = _mapper.Map<IEnumerable<Employee>, IEnumerable<EmployeeViewModel>>(employees);
 
@@ -48,9 +50,11 @@ namespace Route.C41.PL.Controllers
         {
             if (ModelState.IsValid) // server side validation
             {
-                var employee = _mapper.Map<EmployeeViewModel, Employee>(employeeVm);
+				employeeVm.ImageName = DocumentSettings.UploadFile(employeeVm.Image, "images");
 
-                _unitOfWork.EmployeeRepository.Add(employee);
+				var employee = _mapper.Map<EmployeeViewModel, Employee>(employeeVm);
+
+                _unitOfWork.Repository<Employee>().Add(employee);
                 var count = _unitOfWork.Complete();
 
                 if (count > 0)
@@ -67,7 +71,7 @@ namespace Route.C41.PL.Controllers
         {
             if (id is null)
                 return BadRequest();
-            var employee = _unitOfWork.EmployeeRepository.Get(id.Value);
+            var employee = _unitOfWork.Repository<Employee>().Get(id.Value);
 
             if (employee is null)
                 return NotFound();
@@ -93,7 +97,7 @@ namespace Route.C41.PL.Controllers
             try
             {
                 var employee = _mapper.Map<EmployeeViewModel, Employee>(employeeVm);
-                _unitOfWork.EmployeeRepository.Update(employee);
+                _unitOfWork.Repository<Employee>().Update(employee);
                 _unitOfWork.Complete();
                 return RedirectToAction(nameof(Index));
             }
@@ -116,14 +120,14 @@ namespace Route.C41.PL.Controllers
             if (!id.HasValue)
                 return BadRequest();
 
-            var employee = _unitOfWork.EmployeeRepository.Get(id.Value);
+            var employee = _unitOfWork.Repository<Employee>().Get(id.Value);
 
             if (employee is null)
                 return NotFound();
 
             try
             {
-                _unitOfWork.EmployeeRepository.Delete(employee);
+                _unitOfWork.Repository<Employee>().Delete(employee);
             }
             catch (Exception ex)
             {

@@ -31,7 +31,7 @@ namespace Route.C41.BLL.Repositories
 		}
 		public void Delete(T entity)
 		{
-			_dbContext.Set<T>().Remove(entity);
+			_dbContext.Remove(entity);
 		}
 
 		public T Get(int id)

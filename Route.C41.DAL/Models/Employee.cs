@@ -50,8 +50,10 @@ namespace Route.C41.DAL.Models
 
         public DateTime CreationDate { get; set; } = DateTime.Now;
 
-        // ForeginKey
-        public int? DepartmentId { get; set; }
+		public string ImageName { get; set; }
+
+		// ForeginKey
+		public int? DepartmentId { get; set; }
 
         // Navigational Property
         // [InverseProperty(nameof(Models.Department.Employees))]
